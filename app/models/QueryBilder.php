@@ -6,18 +6,20 @@ use PDO;
 class QueryBilder{
 
     public $pdo;
+    public $queryFactory;
 
-    public function __construct()
+    public function __construct(PDO $pdo, QueryFactory $queryFactory)
     {
         // a PDO connection
-        $this->pdo = new PDO('mysql:host=192.168.10.10; dbname=notepad_lesson_8; charset=utf8','homestead', 'secret');
+        $this->pdo = $pdo;
 
+        $this->queryFactory = $queryFactory;
     }
 
 
     public function tasks(){
-        $queryFactory = new QueryFactory('mysql');
-        $select = $queryFactory->newSelect();
+//        $queryFactory = new QueryFactory('mysql');
+        $select = $this->queryFactory->newSelect();
         $select->cols(['*'])
                             ->from('tasks');
 
@@ -32,4 +34,45 @@ class QueryBilder{
 //        var_dump($tasks); exit();
         return $tasks;
     }
+
+    public function task($id){
+        $select = $this->queryFactory->newSelect();
+        $select->cols(['*'])->from('tasks')->where('id = :id')->bindValue('id', $id);
+        $sth = $this->pdo->prepare($select->getStatement());
+        $sth->execute($select->getBindValues());
+        $task = $sth->fetch(PDO::FETCH_ASSOC);
+//        var_dump($task); exit();
+        return $task;
+    }
+
+    public function crateTask(){
+        $cols = ['title', 'content'];
+        $insert = $this->queryFactory->newInsert()->into('tasks')->cols($cols)->bindValues($_POST);
+        $sth = $this->pdo->prepare($insert->getStatement());
+        $sth->execute($insert->getBindValues());
+    }
+
+    public function updateTask($id){
+//        var_dump($_POST);exit();
+        $cols = ['title', 'content'];
+        $update = $this->queryFactory->newUpdate()
+            ->table('tasks')
+            ->cols($cols)
+            ->bindValues($_POST)
+            ->where('id = :id')
+            ->bindValue('id', $id);
+        // prepare the statement
+        $sth = $this->pdo->prepare($update->getStatement());
+
+        // execute with bound values
+        $sth->execute($update->getBindValues());
+//        echo $id;
+    }
+
+    public function deleteTask($id){
+        $delete = $this->queryFactory->newDelete()->from('tasks')->where('id = :id')->bindValue('id', $id);
+        $sth = $this->pdo->prepare($delete->getStatement());
+        $sth->execute($delete->getBindValues());
+    }
+
 }

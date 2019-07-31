@@ -1,16 +1,10 @@
 <?php $this->layout('layout') ?>
-
-<!doctype html>
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-</head>
-<body>
+<title>My tasks</title>
 <div class="container">
     <div class="row">
         <div class="col-md-12">
             <h1>All Tasks</h1>
-            <a href="create.php" class="btn btn-success">Add Task</a>
+            <a href="/createTask" class="btn btn-success">Add Task</a>
             <table class="table">
                 <thead>
                 <tr>
@@ -26,13 +20,13 @@
                         <td><?= $task['id'];?></td>
                         <td><?= $task['title'];?></td>
                         <td>
-                            <a href="show.php?id=<?= $task['id'];?>" class="btn btn-info">
+                            <a href="/task/<?= $task['id'];?>" class="btn btn-info">
                                 Show
                             </a>
-                            <a href="edit.php?id=<?= $task['id'];?>" class="btn btn-warning">
+                            <a href="/editTask/<?= $task['id'];?>" class="btn btn-warning">
                                 Edit
                             </a>
-                            <a onclick="return confirm('are you sure?');" href="delete.php?id=<?= $task['id'];?>" class="btn btn-danger">Delete</a>
+                            <a onclick="return confirm('Are you sure?');" href="/deleteTask/<?= $task['id'];?>" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                 <?php endforeach;?>
@@ -42,5 +36,3 @@
         </div>
     </div>
 </div>
-</body>
-</html>
