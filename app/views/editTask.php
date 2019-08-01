@@ -1,10 +1,12 @@
 <?php $this->layout('layout') ?>
+
 <title>Edit task</title>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
             <h1>Edit Task</h1>
-            <form action="/editTask/<?= $task['id'];?>" method="post">
+            <form action="/updateTask/<?= $task['id'];?>" method="post">
 
                 <div class="form-group">
                     <input type="text" name="title" class="form-control" value="<?= $task['title'];?>">

@@ -1,6 +1,7 @@
-<?php $this->layout('layout');?>
+<?php $this->layout('layout') ?>
 
-<title>My task</title>
+<title>All Tasks</title>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">

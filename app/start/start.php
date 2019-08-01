@@ -1,39 +1,40 @@
 <?php
 
+use Aura\SqlQuery\QueryFactory;
 use DI\Container;
 use DI\ContainerBuilder;
 use League\Plates\Engine;
-use Aura\SqlQuery\QueryFactory;
 //use PDO;
 
-$containerBilder = new ContainerBuilder;
-$containerBilder->addDefinitions([
-    Engine::class=>function(){
-        return new Engine('../app/views');
-    },
-    QueryFactory::class => function(){
-        return new QueryFactory('mysql');
-    },
-    PDO::class => function(){
-        return new PDO('mysql:host=192.168.10.10; dbname=notepad_lesson_8; charset=utf8','homestead', 'secret');
-    }
-]);
+$builder = new ContainerBuilder();
 
-$container = $containerBilder->build();
+$builder->addDefinitions([
+        Engine::class => function(){
+                                    return new Engine('../app/views');
+                                   },
+
+        QueryFactory::class => function(){
+                                         return new QueryFactory('mysql');
+                                         },
+        PDO::class => function(){
+                                return new PDO('mysql:host=192.168.10.10; dbname=notepad_lesson_8; charset=utf8', 'homestead', 'secret');
+                                }
+]);
+$container = $builder->build();
+
 
 $dispatcher = FastRoute\simpleDispatcher(function(FastRoute\RouteCollector $r) {
-    $r->addRoute('GET', '/tasks', ['App\controllers\HomeController', 'tasks']);
-    $r->addRoute('GET', '/task/{id:\d+}', ['App\controllers\HomeController', 'task']);
-
-    $r->addRoute('GET', '/createTask', ['App\controllers\HomeController', 'createTask']);
-    $r->addRoute('POST', '/createTask', ['App\controllers\HomeController', 'createTask']);
+    $r->addRoute('GET', '/tasks', ['App\controllers\HomeController', 'selectTasks']);
+    $r->addRoute('GET', '/task/{id:\d+}', ['App\controllers\HomeController', 'selectTask']);
 
     $r->addRoute('GET', '/editTask/{id:\d+}', ['App\controllers\HomeController', 'editTask']);
-    $r->addRoute('POST', '/editTask/{id:\d+}', ['App\controllers\HomeController', 'editTask']);
+    $r->addRoute('POST', '/updateTask/{id:\d+}', ['App\controllers\HomeController', 'editTask']);
+
+    $r->addRoute('GET', '/addTask', ['App\controllers\HomeController', 'addTask']);
+    $r->addRoute('POST', '/createTask', ['App\controllers\HomeController', 'addTask']);
 
     $r->addRoute('GET', '/deleteTask/{id:\d+}', ['App\controllers\HomeController', 'deleteTask']);
-
-    // {id} must be a number (\d+)
+//    // {id} must be a number (\d+)
 //    $r->addRoute('GET', '/user/{id:\d+}', 'get_user_handler');
 //    // The /{title} suffix is optional
 //    $r->addRoute('GET', '/articles/{id:\d+}[/{title}]', 'get_article_handler');
@@ -56,7 +57,7 @@ switch ($routeInfo[0]) {
         break;
     case FastRoute\Dispatcher::METHOD_NOT_ALLOWED:
         $allowedMethods = $routeInfo[1];
-        echo " ... 405 Method Not Allowed";
+        echo "... 405 Method Not Allowed";
         break;
     case FastRoute\Dispatcher::FOUND:
         $handler = $routeInfo[1];

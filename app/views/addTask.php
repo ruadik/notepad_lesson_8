@@ -1,9 +1,11 @@
 <?php $this->layout('layout') ?>
-<title>Create task</title>
+
+<title>Add Task</title>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1>Create Task</h1>
+            <h1>Add Task</h1>
             <form action="/createTask" method="post">
                 <div class="form-group">
                     <input type="text" class="form-control" name="title">

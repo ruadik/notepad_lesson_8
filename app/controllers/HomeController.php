@@ -1,55 +1,55 @@
 <?php
 namespace App\controllers;
 
-use League\Plates\Engine;
 use App\models\QueryBilder;
+use http\Env\Url;
+use http\Header;
+use League\Plates\Engine;
 
+class HomeController
+{
+    private $view;
+    private $queryBilder;
 
-class HomeController{
-
-    public $views;
-    public $queryBilder;
-
-    public function __construct(Engine $views, QueryBilder $queryBilder)
+    public function __construct(Engine $view, QueryBilder $queryBilder)
     {
-        $this->views=$views;
+        $this->view = $view;
         $this->queryBilder = $queryBilder;
     }
 
 
-    public function tasks(){
-        // Create new Plates instance
-        // Render a template
-        $All_tasks = $this->queryBilder->tasks();
-        echo $this->views->render('tasks', ['tasks' => $All_tasks]);
+    public function selectTasks()
+    {
+        $tasksTemplate = $this->queryBilder->selectTasks();
+        echo $this->view->render('tasks', ['tasks' => $tasksTemplate]);
     }
 
-    public function task($id){
-        $Show_task = $this->queryBilder->task($id);
-        echo $this->views->render('task', ['task' => $Show_task]);
-    }
-
-    public function createTask(){
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
-            $this->queryBilder->crateTask($_POST);
-            header('Location: /tasks');
-        }else {
-            echo $createTask = $this->views->render('createTask');
-        }
+    public function selectTask($id){
+        $task = $this->queryBilder->selectTask($id);
+        echo $this->view->render('task', ['task'=> $task]);
     }
 
     public function editTask($id){
-        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+        if($_SERVER['REQUEST_METHOD'] == 'POST') {
             $this->queryBilder->updateTask($id);
-            header('Location: /tasks');
+            HEADER ("Location: /tasks");
+        }else{
+            $task = $this->queryBilder->selectTask($id);
+            echo $this->view->render('editTask', ['task' => $task]);
+        }
+    }
+
+    public function addTask(){
+        if($_SERVER['REQUEST_METHOD'] == 'POST'){
+            $this->queryBilder->addTask();
+            Header("Location: /tasks");
         }else {
-            $editTask = $this->queryBilder->task($id);
-            echo $this->views->render('editTask', ['task' => $editTask]);
+            echo $addTask = $this->view->render('addTask');
         }
     }
 
     public function deleteTask($id){
-        $delete_task = $this->queryBilder->deleteTask($id);
-        header('Location: /tasks');
+        $this->queryBilder->deleteTask($id);
+        Header("location: /tasks");
     }
 }

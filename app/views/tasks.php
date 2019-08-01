@@ -1,10 +1,12 @@
 <?php $this->layout('layout') ?>
-<title>My tasks</title>
+
+<title>All Tasks</title>
+
 <div class="container">
     <div class="row">
         <div class="col-md-12">
             <h1>All Tasks</h1>
-            <a href="/createTask" class="btn btn-success">Add Task</a>
+            <a href="/addTask" class="btn btn-success">Add Task</a>
             <table class="table">
                 <thead>
                 <tr>
@@ -26,7 +28,7 @@
                             <a href="/editTask/<?= $task['id'];?>" class="btn btn-warning">
                                 Edit
                             </a>
-                            <a onclick="return confirm('Are you sure?');" href="/deleteTask/<?= $task['id'];?>" class="btn btn-danger">Delete</a>
+                            <a onclick="return confirm('are you sure?');" href="/deleteTask/<?= $task['id'];?>" class="btn btn-danger">Delete</a>
                         </td>
                     </tr>
                 <?php endforeach;?>
